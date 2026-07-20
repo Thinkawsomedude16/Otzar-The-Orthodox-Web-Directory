@@ -530,7 +530,7 @@ function descendantIds(rootId) {
 const TYPE_LABEL = {
   "text-library":"Text library","shiur-library":"Shiur library","daily-study":"Daily study",
   "halacha":"Halacha","publisher":"Publisher","institution":"Institution","organization":"Organization",
-  "archive":"Archive","hotline":"Hotline","app":"App","general-portal":"Portal","kashrus":"Kashrus","counter-missionary":"Counter-Missionary"
+  "archive":"Archive","hotline":"Hotline","app":"App","general-portal":"Portal","kashrus":"Kashrus","counter-missionary":"Counter-Missionary","ai-tool":"AI Tool"
 };
 const LANG_LABEL = { en:"English", he:"Hebrew", yi:"Yiddish", arc:"Aramaic", lad:"Ladino", gez:"Ge'ez", ru:"Russian", fr:"French", es:"Spanish", pt:"Portuguese", mixed:"Multi" };
 const MED_LABEL  = { text:"Text", audio:"Audio", video:"Video", print:"Print", phone:"Phone" };
@@ -590,7 +590,7 @@ function renderToolbarChips() {
   });
   const tf = document.getElementById('type-filters');
   tf.innerHTML = "";
-  [["kashrus","Kashrus"],["counter-missionary","Counter-Missionary"],["archive","Archive"],["publisher","Publisher"]].forEach(([k,lbl]) => {
+  [["kashrus","Kashrus"],["counter-missionary","Counter-Missionary"],["archive","Archive"],["publisher","Publisher"],["ai-tool","AI Tools"]].forEach(([k,lbl]) => {
     const b = document.createElement('button');
     b.className = 'chip'; b.textContent = lbl;
     b.setAttribute('aria-pressed', state.types.has(k));

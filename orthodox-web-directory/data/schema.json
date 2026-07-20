@@ -106,7 +106,8 @@
           "enum": [
             "text-library", "shiur-library", "daily-study", "halacha",
             "publisher", "institution", "organization", "archive",
-            "hotline", "app", "general-portal", "kashrus", "counter-missionary"
+            "hotline", "app", "general-portal", "kashrus", "counter-missionary",
+            "ai-tool"
           ]
         },
         "url": {

@@ -19,7 +19,7 @@ Spanish, Portuguese, Ladino & Ge'ez).
 | `data/schema.json` | The JSON Schema (Draft 2020-12) the data conforms to — the data model / contract. |
 | `build_full.py` | The builder script that generates `data/full-data.json`. The source of truth for the data. |
 
-Current dataset: **113 resources · 24 traditions · 20 texts · 35 authorities.**
+Current dataset: **117 resources · 24 traditions · 20 texts · 35 authorities.**
 
 ---
 

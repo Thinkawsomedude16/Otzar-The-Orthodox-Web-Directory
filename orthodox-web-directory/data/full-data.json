@@ -3312,6 +3312,125 @@
       }
     },
     {
+      "id": "ohrbit",
+      "name": "OHRBIT",
+      "type": "ai-tool",
+      "url": "https://www.ou.org/news/the-orthodox-union-launches-revolutionary-ai-powered-torah-app/",
+      "description": "The Orthodox Union's first AI-powered Torah app (launched Feb 2026): personalizes study by interest and level across text, audio and video, with scheduling and gamified streaks. Draws on OU content plus partners including The Rabbi Sacks Legacy and OpenDor Media; includes mental-health and safe-AI guardrails.",
+      "traditionIds": [
+        "modern-orthodox",
+        "universal"
+      ],
+      "languages": [
+        "en"
+      ],
+      "uiLanguages": [
+        "en"
+      ],
+      "medium": [
+        "text",
+        "audio",
+        "video"
+      ],
+      "authorityIds": [
+        "jonathan-sacks"
+      ],
+      "access": "free",
+      "hasApi": false,
+      "verification": {
+        "status": "verified-live",
+        "lastChecked": "2026-06-02",
+        "note": "Launched Feb 2026; link points to the OU announcement — replace with the app's own URL/store listing when confirmed."
+      },
+      "flags": [
+        "New (2026) — app URL not yet pinned; announcement page used."
+      ]
+    },
+    {
+      "id": "dicta",
+      "name": "Dicta — Israel Center for Text Analysis",
+      "type": "ai-tool",
+      "url": "https://dicta.org.il/?lang=en",
+      "description": "Israeli nonprofit (founded by Prof. Moshe Koppel) applying machine learning and NLP to Hebrew and rabbinic texts. Free tools: automatic nikud/vocalization, abbreviation expansion, OCR for Rashi-script and old printings (Dicta Maivin), scriptural allusion finder, synopsis/recension alignment, and advanced Bible/Talmud search. Also releases open models (BEREL, AlephBertGimmel).",
+      "traditionIds": [
+        "universal"
+      ],
+      "languages": [
+        "he",
+        "arc",
+        "en"
+      ],
+      "uiLanguages": [
+        "he",
+        "en"
+      ],
+      "medium": [
+        "text"
+      ],
+      "access": "free",
+      "hasApi": true,
+      "verification": {
+        "status": "verified-live",
+        "lastChecked": "2026-06-02"
+      }
+    },
+    {
+      "id": "sefaria-ai",
+      "name": "Sefaria — AI & Developer Tools",
+      "type": "ai-tool",
+      "url": "https://www.sefaria.org/ai",
+      "description": "Sefaria's AI program and developer surface: AI-assisted translations (first release, the Kli Yakar commentary, early 2026, human-edited over six months), AI-curated topic pages, the Linker API, and an MCP server that lets AI assistants query Sefaria's library directly instead of recalling texts from training data.",
+      "traditionIds": [
+        "universal"
+      ],
+      "languages": [
+        "en",
+        "he",
+        "arc"
+      ],
+      "uiLanguages": [
+        "en"
+      ],
+      "medium": [
+        "text"
+      ],
+      "access": "api-open",
+      "hasApi": true,
+      "verification": {
+        "status": "verified-live",
+        "lastChecked": "2026-06-02"
+      }
+    },
+    {
+      "id": "torahapp",
+      "name": "TorahApp",
+      "type": "app",
+      "url": "https://torahapp.org",
+      "description": "Free all-in-one Orthodox Torah study app: opens a sefer and surfaces all related shiurim, combining Sefaria's open texts with recorded shiur libraries. Daily learning calendars, tikkun mode for practicing leining, multi-tab study, and offline access. Developed with rabbinic guidance.",
+      "traditionIds": [
+        "universal",
+        "modern-orthodox"
+      ],
+      "languages": [
+        "en",
+        "he"
+      ],
+      "uiLanguages": [
+        "en"
+      ],
+      "medium": [
+        "text",
+        "audio"
+      ],
+      "access": "free",
+      "hasApi": false,
+      "verification": {
+        "status": "not-checked",
+        "lastChecked": "",
+        "note": "App well-documented in Jewish press; exact current domain unverified."
+      }
+    },
+    {
       "id": "outreach-judaism",
       "name": "Outreach Judaism",
       "type": "counter-missionary",
