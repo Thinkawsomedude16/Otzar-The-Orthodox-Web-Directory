@@ -510,9 +510,13 @@
 let DATA = null;  // loaded from data/full-data.json at runtime
 // ── Lookups ─────────────────────────────────────────────────────────────────
 const byId = (arr) => Object.fromEntries(arr.map(x => [x.id, x]));
-const TRAD = byId(DATA.traditions);
-const TEXT = byId(DATA.texts);
-const AUTH = byId(DATA.authorities);
+// Populated by buildLookups() once DATA has loaded (see init() at the end).
+let TRAD = {}, TEXT = {}, AUTH = {};
+function buildLookups() {
+  TRAD = byId(DATA.traditions);
+  TEXT = byId(DATA.texts);
+  AUTH = byId(DATA.authorities);
+}
 
 // descendants of a tradition (so picking "Hasidic" includes Satmar, Belz, …)
 function descendantIds(rootId) {
@@ -740,6 +744,7 @@ document.addEventListener('keydown', e => { if (e.key === "Escape") closeDrawer(
     const res = await fetch('data/full-data.json', { cache: 'no-cache' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     DATA = await res.json();
+    buildLookups();
     render();
   } catch (err) {
     grid.innerHTML =
