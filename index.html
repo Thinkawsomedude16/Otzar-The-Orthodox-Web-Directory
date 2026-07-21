@@ -335,6 +335,29 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+  .rlink {
+    display: block;
+    font-size: .82rem;
+    font-family: 'Spectral', Georgia, serif;
+    color: var(--accent);
+    text-decoration: none;
+    margin-block-start: .1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    border-block-end: 1px solid transparent;
+    width: fit-content;
+    transition: border-color .15s, color .15s;
+  }
+  .rlink:hover { border-block-end-color: var(--accent); }
+  .rlink .ext { font-size: .7rem; opacity: .6; }
+  .rlink-plain {
+    color: var(--ink-soft);
+    font-style: italic;
+    cursor: default;
+    border-block-end: 0;
+  }
   .meta-row { display: flex; flex-wrap: wrap; gap: .35rem; margin-block-start: .2rem; }
   .tag {
     font-size: .72rem;
@@ -655,11 +678,28 @@ function card(r) {
   if ((r.uiLanguages||[]).length === 1 && r.uiLanguages[0] === "pt") tags.push(`<span class="tag pt-ui">Português UI</span>`);
   if (r.access === "copyright-restricted") tags.push(`<span class="tag copyright">© restricted</span>`);
 
+  // Source link shown directly on the card (domain only, for legibility).
+  let linkHtml = "";
+  if (r.url) {
+    let shown;
+    try {
+      const u = new URL(r.url);
+      shown = u.hostname.replace(/^www\./, "") + (u.pathname !== "/" ? u.pathname.replace(/\/$/, "") : "");
+    } catch (e) { shown = r.url; }
+    linkHtml = `<a class="rlink" href="${r.url}" target="_blank" rel="noopener"
+                   onclick="event.stopPropagation()" title="${r.url}">${shown} <span class="ext">↗</span></a>`;
+  } else if (r.phone) {
+    linkHtml = `<span class="rlink rlink-plain">${r.phone}</span>`;
+  } else {
+    linkHtml = `<span class="rlink rlink-plain">no public URL</span>`;
+  }
+
   el.innerHTML = `
     <span class="vbadge v-${v}">${VERIF_LABEL[v]}</span>
     <span class="rtype">${TYPE_LABEL[r.type]||r.type}</span>
     <h3>${r.name}</h3>
     <p>${r.description||""}</p>
+    ${linkHtml}
     <div class="meta-row">${tags.join("")}</div>`;
   return el;
 }
