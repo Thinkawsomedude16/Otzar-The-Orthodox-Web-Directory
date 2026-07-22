@@ -184,6 +184,70 @@
   }
   @media (max-width: 720px) { .shell { grid-template-columns: 1fr; } }
 
+  /* ---------- Mobile (<=640px): adapt without touching desktop ---------- */
+  @media (max-width: 640px) {
+    header {
+      padding: 1rem 1rem .9rem;
+      gap: .6rem;
+    }
+    .logo { font-size: 1.5rem; }
+    .logo small { font-size: .68rem; letter-spacing: .12em; margin-block-start: .35rem; }
+    .tagline-line { font-size: .82rem; margin-block-start: .5rem; }
+    .masthead-meta { margin-inline-start: 0; text-align: start; font-size: .72rem; }
+
+    .toolbar { padding: .75rem 1rem; gap: .6rem; }
+    .search { flex-basis: 100%; }
+    /* filter groups scroll sideways instead of stacking into a tall wall */
+    #medium-filters, #flag-filters, #type-filters {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-block-end: .2rem;
+    }
+    #medium-filters::-webkit-scrollbar,
+    #flag-filters::-webkit-scrollbar,
+    #type-filters::-webkit-scrollbar { display: none; }
+    .filter-group.row-break { border-block-start: 0; padding-block-start: .2rem; margin-block-start: 0; }
+    .chip { padding: .5rem .8rem; }         /* bigger tap targets */
+
+    .shell { padding: 1rem; gap: 1rem; }
+
+    /* Sidebar becomes a collapsible panel that doesn't push results down */
+    aside {
+      position: static;
+      max-height: none;
+      order: -1;
+    }
+    aside.collapsed .tree-scroll,
+    aside.collapsed .reset { display: none; }
+    aside h2 {
+      cursor: pointer;
+      margin: 0;
+      padding: .5rem .3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: .8rem;
+    }
+    aside h2::after {
+      content: "▾";
+      font-size: .9rem;
+      transition: transform .2s;
+    }
+    aside.collapsed h2::after { transform: rotate(-90deg); }
+    .tree-scroll { max-height: 45vh; margin-block-start: .5rem; }
+
+    /* Cards: single column, comfortable spacing */
+    .grid { grid-template-columns: 1fr; gap: .8rem; }
+    .rcard { padding: 1rem; }
+    .rcard h3 { font-size: 1.1rem; }
+
+    /* Drawer: full width */
+    .drawer { width: 100vw; padding: 1.3rem 1.2rem 2.5rem; }
+    .drawer dl { grid-template-columns: 5.5rem 1fr; }
+  }
+
   /* ---------- Tradition tree ---------- */
   aside {
     position: sticky;
@@ -334,6 +398,29 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+  .rlink {
+    display: block;
+    font-size: .82rem;
+    font-family: 'Spectral', Georgia, serif;
+    color: var(--accent);
+    text-decoration: none;
+    margin-block-start: .1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    border-block-end: 1px solid transparent;
+    width: fit-content;
+    transition: border-color .15s, color .15s;
+  }
+  .rlink:hover { border-block-end-color: var(--accent); }
+  .rlink .ext { font-size: .7rem; opacity: .6; }
+  .rlink-plain {
+    color: var(--ink-soft);
+    font-style: italic;
+    cursor: default;
+    border-block-end: 0;
   }
   .meta-row { display: flex; flex-wrap: wrap; gap: .35rem; margin-block-start: .2rem; }
   .tag {
@@ -486,7 +573,7 @@
 
 <div class="shell" id="shell">
   <aside>
-    <h2>Traditions</h2>
+    <h2 id="trad-heading">Traditions</h2>
     <div id="tree" class="tree-scroll"></div>
     <button class="reset" id="reset">Clear all filters</button>
   </aside>
@@ -510,9 +597,13 @@
 let DATA = null;  // loaded from data/full-data.json at runtime
 // ── Lookups ─────────────────────────────────────────────────────────────────
 const byId = (arr) => Object.fromEntries(arr.map(x => [x.id, x]));
-const TRAD = byId(DATA.traditions);
-const TEXT = byId(DATA.texts);
-const AUTH = byId(DATA.authorities);
+// Populated by buildLookups() once DATA has loaded (see init() at the end).
+let TRAD = {}, TEXT = {}, AUTH = {};
+function buildLookups() {
+  TRAD = byId(DATA.traditions);
+  TEXT = byId(DATA.texts);
+  AUTH = byId(DATA.authorities);
+}
 
 // descendants of a tradition (so picking "Hasidic" includes Satmar, Belz, …)
 function descendantIds(rootId) {
@@ -651,11 +742,28 @@ function card(r) {
   if ((r.uiLanguages||[]).length === 1 && r.uiLanguages[0] === "pt") tags.push(`<span class="tag pt-ui">Português UI</span>`);
   if (r.access === "copyright-restricted") tags.push(`<span class="tag copyright">© restricted</span>`);
 
+  // Source link shown directly on the card (domain only, for legibility).
+  let linkHtml = "";
+  if (r.url) {
+    let shown;
+    try {
+      const u = new URL(r.url);
+      shown = u.hostname.replace(/^www\./, "") + (u.pathname !== "/" ? u.pathname.replace(/\/$/, "") : "");
+    } catch (e) { shown = r.url; }
+    linkHtml = `<a class="rlink" href="${r.url}" target="_blank" rel="noopener"
+                   onclick="event.stopPropagation()" title="${r.url}">${shown} <span class="ext">↗</span></a>`;
+  } else if (r.phone) {
+    linkHtml = `<span class="rlink rlink-plain">${r.phone}</span>`;
+  } else {
+    linkHtml = `<span class="rlink rlink-plain">no public URL</span>`;
+  }
+
   el.innerHTML = `
     <span class="vbadge v-${v}">${VERIF_LABEL[v]}</span>
     <span class="rtype">${TYPE_LABEL[r.type]||r.type}</span>
     <h3>${r.name}</h3>
     <p>${r.description||""}</p>
+    ${linkHtml}
     <div class="meta-row">${tags.join("")}</div>`;
   return el;
 }
@@ -733,6 +841,24 @@ document.getElementById('reset').addEventListener('click', () => {
 document.getElementById('scrim').addEventListener('click', closeDrawer);
 document.addEventListener('keydown', e => { if (e.key === "Escape") closeDrawer(); });
 
+// ── Mobile: collapsible tradition sidebar (no effect on desktop) ──────────────
+function setupMobileSidebar() {
+  const aside = document.querySelector('aside');
+  const heading = document.getElementById('trad-heading');
+  if (!aside || !heading) return;
+  const isMobile = () => window.matchMedia('(max-width: 640px)').matches;
+  // Start collapsed on phones so results are visible immediately.
+  if (isMobile()) aside.classList.add('collapsed');
+  heading.addEventListener('click', () => {
+    if (isMobile()) aside.classList.toggle('collapsed');
+  });
+  // If the viewport crosses the breakpoint, keep the state sensible.
+  window.matchMedia('(max-width: 640px)').addEventListener('change', e => {
+    if (!e.matches) aside.classList.remove('collapsed');   // desktop: always expanded
+    else aside.classList.add('collapsed');                 // mobile: default collapsed
+  });
+}
+
 // ── Load data, then render ───────────────────────────────────────────────────
 (async function init() {
   const grid = document.getElementById('grid');
@@ -740,7 +866,9 @@ document.addEventListener('keydown', e => { if (e.key === "Escape") closeDrawer(
     const res = await fetch('data/full-data.json', { cache: 'no-cache' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     DATA = await res.json();
+    buildLookups();
     render();
+    setupMobileSidebar();
   } catch (err) {
     grid.innerHTML =
       '<div class="empty">Could not load the directory data.<br>' +
